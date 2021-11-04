@@ -1,6 +1,6 @@
 package com.iluwatar.daofactory;
 
-// Interface that all CustomerDAOs must support
+// Interface that all UserDAOs must support
 
 import javax.sql.RowSet;
 import java.util.Collection;
@@ -11,5 +11,5 @@ public interface UserDAO {
     User findUser();
     boolean updateUser();
     RowSet selectUserRS();
-    Collection selectUsersTO();
+    Collection selectUsersTO(User user);
 }
