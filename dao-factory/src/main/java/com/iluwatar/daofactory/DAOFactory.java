@@ -20,7 +20,7 @@ public abstract class DAOFactory {
 
         switch (whichFactory) {
             case CLOUDSCAPE:
-//                return new CloudscapeDAOFactory();
+                return new CloudscapeDAOFactory();
             case ORACLE    :
 //                return new OracleDAOFactory();
             case SYBASE    :
