@@ -25,15 +25,8 @@ public class DerbyDAOFactory extends DAOFactory {
         return conn1;
     }
     public UserDAO getUserDAO() {
-        // CloudscapeUserDAO implements UserDAO
+        // DerbyUserDAO implements UserDAO
         return new DerbyUserDAO();
     }
-//    public AccountDAO getAccountDAO() {
-//        // CloudscapeAccountDAO implements AccountDAO
-//        return new CloudscapeAccountDAO();
-//    }
-//    public OrderDAO getOrderDAO() {
-//        // CloudscapeOrderDAO implements OrderDAO
-//        return new CloudscapeOrderDAO();
-//    }
+
 }
