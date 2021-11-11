@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 
 public interface UserDAO {
-    int insertUser(String name, String address);
+    int insertUser(String name, String address, String city);
     boolean deleteUser();
     User findUser(int newCustNo);
     boolean updateUser();

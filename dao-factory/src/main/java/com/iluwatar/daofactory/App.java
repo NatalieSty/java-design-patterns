@@ -11,16 +11,18 @@ public class App {
      */
     public static void main(String[] args) {
         // create the required DAO Factory
-        DAOFactory cloudscapeFactory = DAOFactory.getDAOFactory(DAOFactory.CLOUDSCAPE);
+        DAOFactory derbyFactory = DAOFactory.getDAOFactory(DAOFactory.DERBY);
 
         // Create a DAO
-        UserDAO userDAO = cloudscapeFactory.getUserDAO();
-        CloudscapeDAOFactory.createConnection();
+        UserDAO userDAO = derbyFactory.getUserDAO();
+        DerbyDAOFactory.createConnection();
         // create a new customer
-        int newCustNo = userDAO.insertUser("Sam Doe", "333 4th Street, Seattle, WA, 98001");
+        int newCustNo = userDAO.insertUser("Sam Doe", "333 4th Street", "Seattle");
         User user = userDAO.findUser(newCustNo);
-        user.setStreetAddress("12345 8th Street, Seattle, WA, 98001");
+        System.out.println(user.getUserId()+ user.getName() + user.getStreetAddress() + user.getCity());
+        user.setStreetAddress("12345 8th Street");
         user.setName("Sam Smith");
+        user.setCity("New York");
         userDAO.updateUser();
         userDAO.deleteUser();
 

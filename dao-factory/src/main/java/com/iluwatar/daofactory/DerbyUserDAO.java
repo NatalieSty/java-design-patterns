@@ -17,7 +17,8 @@ public class DerbyUserDAO implements UserDAO{
                 + "("
                 + " ID INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY(Start with 1, Increment by 1),"
                 + " NAME VARCHAR(140) NOT NULL,"
-                + " ADDRESS VARCHAR(140) NOT NULL"
+                + " ADDRESS VARCHAR(140) NOT NULL,"
+                + " CITY VARCHAR(140) NOT NULL"
                 + ")";
         //Creating the Statement object
         Statement stmt = null;
@@ -37,13 +38,13 @@ public class DerbyUserDAO implements UserDAO{
     // CloudscapeDAOFactory.createConnection()
     // to get a connection as required
     @Override
-    public int insertUser(String name, String address) {
+    public int insertUser(String name, String address, String city) {
         // Implement insert user here.
         // Return newly created user number
         // or a -1 on error
         int last_inserted_id = -1;
         try {
-            String query = "INSERT INTO DERBYUSER(NAME, ADDRESS) VALUES ('"+name+"', '"+address+"')";
+            String query = "INSERT INTO DERBYUSER(NAME, ADDRESS, CITY) VALUES ('"+name+"', '"+address+"', '"+city+"')";
             PreparedStatement prest;
             prest = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
@@ -77,6 +78,7 @@ public class DerbyUserDAO implements UserDAO{
         int id = -1;
         String address = "";
         String name = "";
+        String city = "";
         try {
             Statement sta = con.createStatement();
 
@@ -87,6 +89,7 @@ public class DerbyUserDAO implements UserDAO{
                 id = res.getInt("ID");
                 address = res.getString("ADDRESS");
                 name = res.getString("NAME");
+                city = res.getString("CITY");
             }
             res.close();
 
@@ -98,6 +101,7 @@ public class DerbyUserDAO implements UserDAO{
         user.setUserId(id);
         user.setName(name);
         user.setStreetAddress(address);
+        user.setCity(city);
         return user;
     }
 

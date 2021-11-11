@@ -3,7 +3,7 @@ package com.iluwatar.daofactory;
 public abstract class DAOFactory {
     // List of DAO types supported by the factory
     // TODO: decide on which databases to use
-    public static final int CLOUDSCAPE = 1;
+    public static final int DERBY = 1;
     public static final int ORACLE = 2;
     public static final int SYBASE = 3;
 
@@ -19,8 +19,8 @@ public abstract class DAOFactory {
             int whichFactory) {
 
         switch (whichFactory) {
-            case CLOUDSCAPE:
-                return new CloudscapeDAOFactory();
+            case DERBY:
+                return new DerbyDAOFactory();
             case ORACLE    :
 //                return new OracleDAOFactory();
             case SYBASE    :
