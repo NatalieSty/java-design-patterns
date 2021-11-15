@@ -4,16 +4,21 @@ import javax.sql.RowSet;
 import javax.sql.rowset.JdbcRowSet;
 import javax.sql.RowSet;
 import javax.sql.rowset.BaseRowSet;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 import java.sql.*;
 import java.util.function.BiPredicate;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
+import lombok.extern.slf4j.Slf4j;
+
 
 // CloudscapeCustomerDAO implementation of the
 // CustomerDAO interface. This class can contain all
 // Cloudscape specific code and SQL statements.
 // The client is thus shielded from knowing
 // these implementation details.
+@Slf4j
 public class DerbyUserDAO implements UserDAO{
     Connection con = DerbyDAOFactory.createConnection();
     public DerbyUserDAO() {
@@ -102,6 +107,7 @@ public class DerbyUserDAO implements UserDAO{
 
             ResultSet res = sta.executeQuery(
                     "SELECT * FROM DERBYUSER WHERE ID = " + newCustNo);
+
             while (res.next()) {
                 id = res.getInt("ID");
                 address = res.getString("ADDRESS");
@@ -195,4 +201,12 @@ public class DerbyUserDAO implements UserDAO{
         return selectedUsers;
     }
 
+    private User createUser(ResultSet resultSet) throws SQLException {
+        User user = new User();
+        user.setUserId(resultSet.getInt("ID"));
+        user.setName(resultSet.getString("NAME"));
+        user.setStreetAddress(resultSet.getString("ADDRESS"));
+        user.setCity(resultSet.getString("CITY"));
+        return user;
+    }
 }

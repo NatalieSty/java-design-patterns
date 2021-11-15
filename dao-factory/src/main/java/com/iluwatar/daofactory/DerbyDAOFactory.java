@@ -4,7 +4,7 @@ import java.sql.*;
 public class DerbyDAOFactory extends DAOFactory {
 
     // method to create Cloudscape connections
-    public static Connection createConnection() {
+    static Connection createConnection() {
         // Use DRIVER and DBURL to create a connection
         // Recommend connection pool implementation/usage
 
@@ -17,7 +17,6 @@ public class DerbyDAOFactory extends DAOFactory {
             if (conn1 != null) {
                 System.out.println("Connected to database #1");
             }
-
 
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
