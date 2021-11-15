@@ -19,23 +19,28 @@ public class App {
         UserDAO userDAO = derbyFactory.getUserDAO();
         DerbyDAOFactory.createConnection();
         // create a new customer
-        int newCustNo = userDAO.insertUser("Sam Doe", "333 4th Street", "Seattle");
+        User u = new User();
+        u.setName("Sam Doe");
+        u.setStreetAddress("333 4th Street");
+        u.setCity("Seattle");
+        int newCustNo = userDAO.insertUser(u);
         User user = userDAO.findUser(newCustNo);
-//        System.out.println(user.getUserId()+ user.getName() + user.getStreetAddress() + user.getCity());
+        System.out.println(user.getUserId()+ user.getName() + user.getStreetAddress() + user.getCity());
         user.setStreetAddress("12345 8th Street");
         user.setName("Sam Smith");
         user.setCity("York");
         userDAO.updateUser(user);
-//        System.out.println(user.getUserId()+ user.getName() + user.getStreetAddress() + user.getCity());
+        System.out.println(user.getUserId()+ user.getName() + user.getStreetAddress() + user.getCity());
         userDAO.deleteUser(user);
         String criteriaCol = "CITY";
         String criteria = "Seattle";
         userDAO.selectUserRS(criteriaCol, criteria);
         Collection<User> userList = userDAO.selectUsersTO(criteriaCol, criteria);
-        for (User u: userList){
-            System.out.println(u.getUserId());
-            System.out.println(u.getName());
-            System.out.println(u.getStreetAddress());
+        System.out.println(userList.size());
+        for (User uu: userList){
+            System.out.println(uu.getUserId());
+            System.out.println(uu.getName());
+            System.out.println(uu.getStreetAddress());
         }
 
     }

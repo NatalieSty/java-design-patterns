@@ -24,6 +24,7 @@ public class DerbyDAOFactory extends DAOFactory {
         }
         return conn1;
     }
+    @Override
     public UserDAO getUserDAO() {
         // DerbyUserDAO implements UserDAO
         return new DerbyUserDAO();
