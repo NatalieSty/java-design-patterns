@@ -116,7 +116,6 @@ public class DerbyUserDAO implements UserDAO{
             }
             res.close();
             sta.close();
-//            con.close();
         } catch (Exception e) {
             System.err.println("Exception: "+e.getMessage());
         }
@@ -201,12 +200,12 @@ public class DerbyUserDAO implements UserDAO{
         return selectedUsers;
     }
 
-    private User createUser(ResultSet resultSet) throws SQLException {
-        User user = new User();
-        user.setUserId(resultSet.getInt("ID"));
-        user.setName(resultSet.getString("NAME"));
-        user.setStreetAddress(resultSet.getString("ADDRESS"));
-        user.setCity(resultSet.getString("CITY"));
-        return user;
-    }
+//    private User createUser(ResultSet resultSet) throws SQLException {
+//        User user = new User();
+//        user.setUserId(resultSet.getInt("ID"));
+//        user.setName(resultSet.getString("NAME"));
+//        user.setStreetAddress(resultSet.getString("ADDRESS"));
+//        user.setCity(resultSet.getString("CITY"));
+//        return user;
+//    }
 }

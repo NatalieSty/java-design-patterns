@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.sql.*;
+import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -68,38 +69,38 @@ public class DerbyUserDaoTest {
         }
 
         /**
-         * Represents the scenario when DAO operations are being performed on a non existing customer.
+         * Represents the scenario when DAO operations are being performed on a non existing User.
          */
         @Nested
-        class NonExistingCustomer {
+        class NonExistingUser {
 
             @Test
             void addingShouldResultInSuccess() throws Exception {
 
 
-                final var nonExistingCustomer = new User();
-                nonExistingCustomer.setName("Robert True");
-                nonExistingCustomer.setStreetAddress("1234 123th AVE");
-                nonExistingCustomer.setCity("York");
-                var result = dao.insertUser(nonExistingCustomer);
-                nonExistingCustomer.setUserId(result);
+                final var nonExistingUser = new User();
+                nonExistingUser.setName("Robert True");
+                nonExistingUser.setStreetAddress("1234 123th AVE");
+                nonExistingUser.setCity("York");
+                var result = dao.insertUser(nonExistingUser);
+                nonExistingUser.setUserId(result);
                 assertNotNull(result);
 
-                assertEquals(nonExistingCustomer.getUserId(), dao.findUser(result).getUserId());
+                assertEquals(nonExistingUser.getUserId(), dao.findUser(result).getUserId());
             }
 
             @Test
             void deletionShouldBeFailure() throws Exception {
-                final var nonExistingCustomer = new User();
-                nonExistingCustomer.setName("Robert True");
-                var result = dao.deleteUser(nonExistingCustomer);
+                final var nonExistingUser = new User();
+                nonExistingUser.setName("Robert True");
+                var result = dao.deleteUser(nonExistingUser);
 
                 assertFalse(result);
             }
 
             @Test
-            void updateShouldBeFailureAndNotAffectExistingCustomers() throws Exception {
-                final var nonExistingId = getNonExistingCustomerId();
+            void updateShouldBeFailure() throws Exception {
+                final var nonExistingId = getNonExistingUserId();
                 final var newName = "Douglas MacArthur";
                 final var user = new User();
                 user.setName(newName);
@@ -108,8 +109,8 @@ public class DerbyUserDaoTest {
             }
 
             @Test
-            void retrieveShouldReturnNoCustomer() throws Exception {
-                assertEquals(dao.findUser(getNonExistingCustomerId()).getUserId(), -1);
+            void retrieveShouldReturnNoUser() throws Exception {
+                assertEquals(dao.findUser(getNonExistingUserId()).getUserId(), -1);
             }
         }
 
@@ -120,13 +121,46 @@ public class DerbyUserDaoTest {
         @Nested
         class ExistingCustomer {
 
-
-
             @Test
-            void deletionShouldBeSuccessAndCustomerShouldBeNonAccessible() throws Exception {
+            void deletionShouldBeSuccessAndUserShouldBeNonAccessible() throws Exception {
 
                 var result = dao.deleteUser(user);
                 assertTrue(result);
+            }
+
+            @Test
+            void selectUserRSWithMoreUsers() throws Exception {
+                final var newName = "Bernard GG";
+                final var newAddress = "444 3th AVE";
+                final var newCity = "Seattle";
+                final var newUser = new User();
+                newUser.setUserId(user.getUserId());
+                newUser.setName(newName);
+                newUser.setStreetAddress(newAddress);
+                newUser.setCity(newCity);
+                dao.insertUser(newUser);
+                final String criteriaCol = "CITY";
+                final String criteria = "Seattle";
+                ResultSet rs = dao.selectUserRS(criteriaCol, criteria);
+                assertNotNull(rs);
+            }
+
+            @Test
+            void selectUserTOWithMoreUsers() throws Exception {
+                final var newName = "Bernard GG";
+                final var newAddress = "444 3th AVE";
+                final var newCity = "Seattle";
+                final var newUser = new User();
+                newUser.setUserId(user.getUserId());
+                newUser.setName(newName);
+                newUser.setStreetAddress(newAddress);
+                newUser.setCity(newCity);
+                dao.insertUser(newUser);
+                final String criteriaCol = "CITY";
+                final String criteria = "Seattle";
+                Collection<User> userList = dao.selectUsersTO(criteriaCol, criteria);
+                assertNotNull(userList);
+                assertEquals(userList.size(), 2);
 
             }
 
@@ -167,11 +201,11 @@ public class DerbyUserDaoTest {
     }
 
     /**
-     * An arbitrary number which does not correspond to an active Customer id.
+     * An arbitrary number which does not correspond to an active User id.
      *
      * @return an int of a customer id which doesn't exist
      */
-    private int getNonExistingCustomerId() {
+    private int getNonExistingUserId() {
         return 999;
     }
 }
