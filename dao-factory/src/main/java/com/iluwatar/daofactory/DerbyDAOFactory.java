@@ -1,6 +1,8 @@
 package com.iluwatar.daofactory;
 import java.sql.*;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class DerbyDAOFactory extends DAOFactory {
 
     // method to create Cloudscape connections
@@ -15,7 +17,7 @@ public class DerbyDAOFactory extends DAOFactory {
             String dbURL1 = "jdbc:derby:dao-factory/DerbyDB;create=true";
             conn1 = DriverManager.getConnection(dbURL1);
             if (conn1 != null) {
-                System.out.println("Connected to database #1");
+                LOGGER.info("Connected to database #1");
             }
 
         } catch (SQLException | ClassNotFoundException ex) {

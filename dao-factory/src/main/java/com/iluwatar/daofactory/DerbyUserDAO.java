@@ -38,9 +38,9 @@ public class DerbyUserDAO implements UserDAO{
             ResultSet rs = dbm.getTables(null, "APP", "DERBYUSER", null);
             if (!rs.next()) {
                 stmt.execute(SQL_CREATE);
-                System.out.println("Table created");
+                LOGGER.info("Table created");
             }else{
-                System.out.println("already exists");
+                LOGGER.info("Table already exists");
             }
 
         } catch (SQLException e) {
@@ -117,7 +117,7 @@ public class DerbyUserDAO implements UserDAO{
             res.close();
             sta.close();
         } catch (Exception e) {
-            System.err.println("Exception: "+e.getMessage());
+            LOGGER.error(e.getMessage());
         }
         user.setUserId(id);
         user.setName(name);
@@ -147,7 +147,7 @@ public class DerbyUserDAO implements UserDAO{
             return preparedStatement.executeUpdate() > 0;
 
         }catch (SQLException throwables) {
-            throwables.printStackTrace();
+            LOGGER.error(throwables.getMessage());
         }
 
         return false;
@@ -166,7 +166,7 @@ public class DerbyUserDAO implements UserDAO{
             res.close();
             sta.close();
         } catch (Exception e) {
-            System.err.println("Exception: "+e.getMessage());
+            LOGGER.error(e.getMessage());
         }
         return res;
     }
@@ -195,7 +195,7 @@ public class DerbyUserDAO implements UserDAO{
             res.close();
             sta.close();
         } catch (Exception e) {
-            System.err.println("Exception: "+e.getMessage());
+            LOGGER.error(e.getMessage());
         }
         return selectedUsers;
     }
