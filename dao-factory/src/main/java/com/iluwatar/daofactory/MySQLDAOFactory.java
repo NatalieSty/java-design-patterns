@@ -7,7 +7,7 @@ public class MySQLDAOFactory extends DAOFactory {
 	public static Connection createConnection() {
 		Connection con = null;
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 			String dburl = "jdbc:mysql:dao-factory/MySQLDB;create=true";
 			con = DriverManager.getConnection(dburl);
 		} catch (SQLException e) {
