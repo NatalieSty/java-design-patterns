@@ -76,8 +76,6 @@ public class DerbyUserDaoTest {
 
             @Test
             void addingShouldResultInSuccess() throws Exception {
-
-
                 final var nonExistingUser = new User();
                 nonExistingUser.setName("Robert True");
                 nonExistingUser.setStreetAddress("1234 123th AVE");
@@ -85,7 +83,6 @@ public class DerbyUserDaoTest {
                 var result = dao.insertUser(nonExistingUser);
                 nonExistingUser.setUserId(result);
                 assertNotNull(result);
-
                 assertEquals(nonExistingUser.getUserId(), dao.findUser(result).getUserId());
             }
 
@@ -123,7 +120,6 @@ public class DerbyUserDaoTest {
 
             @Test
             void deletionShouldBeSuccessAndUserShouldBeNonAccessible() throws Exception {
-
                 var result = dao.deleteUser(user);
                 assertTrue(result);
             }
@@ -187,7 +183,7 @@ public class DerbyUserDaoTest {
 
 
     /**
-     * Delete customer schema for fresh setup per test.
+     * Delete user schema for fresh setup per test.
      *
      * @throws SQLException if any error occurs.
      */

@@ -10,6 +10,6 @@ public class MySQLDAOFactoryTest {
     void getUserDAOTest() {
         DAOFactory mySQLFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
         UserDAO userDAO = mySQLFactory.getUserDAO();
-        assertTrue(userDAO instanceof MySQLUserDAO);
+        assertTrue(userDAO instanceof MySQLUserDao);
     }
 }

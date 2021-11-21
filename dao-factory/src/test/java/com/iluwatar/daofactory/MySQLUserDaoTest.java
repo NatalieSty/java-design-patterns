@@ -11,7 +11,7 @@ import java.util.Collection;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MySQLUserDaoTest {
-    private MySQLUserDAO dao;
+    private MySQLUserDao dao;
     private User user = new User();
     private Connection con;
     /**
@@ -59,7 +59,7 @@ public class MySQLUserDaoTest {
         @BeforeEach
         public void setUp() throws Exception {
             DAOFactory mysqlFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
-            dao = (MySQLUserDAO) mysqlFactory.getUserDAO();
+            dao = (MySQLUserDao) mysqlFactory.getUserDAO();
             user.setName("Sam Doe");
             user.setStreetAddress("333 4th Street");
             user.setCity("Seattle");
