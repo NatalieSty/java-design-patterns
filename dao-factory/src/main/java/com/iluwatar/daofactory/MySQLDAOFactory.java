@@ -2,21 +2,21 @@ package com.iluwatar.daofactory;
 import java.sql.*;
 
 public class MySQLDAOFactory extends DAOFactory {
-	public static final String Driver = "com.mysql.jdbc.Driver";
 
 	//method to create MySQL connection
-	public static Connection createConnection(String dburl) {
+	public static Connection createConnection() {
+		Connection con = null;
 		try {
-			Class.forName(Driver);
-			Connection con = DriverManager.getConnection(dburl);
-			return con;
+			Class.forName("com.mysql.jdbc.Driver");
+			String dburl = "jdbc:mysql:dao-factory/MySQLDB;create=true"
+			con = DriverManager.getConnection(dburl);
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		} catch (ClassNotFoundException e) {
 			System.out.println("Driver not found.\n");
 			System.exit(1);
 		}
-		return null;
+		return con;
 	}
 	public UserDao getUserDao() {
 		return new MySQLUserDao();

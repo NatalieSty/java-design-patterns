@@ -3,127 +3,164 @@ package com.iluwatar.daofactory;
 import javax.sql.RowSet;
 import java.util.Collection;
 import java.sql.*;
-
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 public class MySQLUserDAO implements UserDAO {
+	Connectioncon = MySQLDAOFactory.createConnection();
+	public MySQLUserDAO() {
+		 String SQL_CREATE = "CREATE TABLE MYSQLUSER"
+                + "("
+                + " ID INT NOT NULL PRIMARY KEY,"
+                + " NAME VARCHAR(140) NOT NULL,"
+                + " ADDRESS VARCHAR(140) NOT NULL,"
+                + " CITY VARCHAR(140) NOT NULL"
+                + ")";
+        //Creating the Statement object
+        try {
+            DatabaseMetaData dbm = con.getMetaData();
+            Statement stmt = con.createStatement();
+            ResultSet rs = dbm.getTables(null, "APP", "MYSQLUSER", null);
+            if (!rs.next()) {
+                stmt.execute(SQL_CREATE);
+                LOGGER.info("Table created");
+            }else{
+                LOGGER.info("Table already exists");
+            }
 
-	private String DBURL;
-	public MySQLUserDAO(String DBURL) {
-		super();
-		this.DBURL = DBURL;
-	}
-	//tableName = name of table to insert to
-	//values = values to insert, comma-separated eg: 1, John, 25 1st Street, Chicago
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 	@Override
-	public int insertUser(String tableName, String values) {
-		Connection con = MySQLDAOFactory.createConnection(DBURL);
-		String query = "Insert into " + tableName + " Values (" + values + ")";
-		Statement stmt = con.createStatement();
-		try {
-			stmt.executeUpdate(query);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return -1;
-		}
-		con.close();
-	}
+	public int insertUser(User user) {
+        int last_inserted_id = -1;
+        try {
+            PreparedStatement statement = con.prepareStatement("INSERT INTO MYSQLUSER(NAME, ADDRESS, CITY) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            statement.setString(1, user.getName());
+            statement.setString(2, user.getStreetAddress());
+            statement.setString(3, user.getCity());
+            statement.execute();
+            ResultSet rs = statement.getGeneratedKeys();
+            if (rs.next()) {
+                last_inserted_id = rs.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return last_inserted_id;
+    }
 	//tableName = name of table to delete from
 	//where = where condition for deletion
 	@Override
-	public boolean deleteUser(String tableName, String where) {
-		Connection con = MySQLDAOFactory.createConnection(DBURL);
-		String query = "Delete from " + tableName + " where " + where;
-		Statement stmt = con.createStatement();
-		try {
-			stmt.executeUpdate(query);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		}
-		con.close();
-		return true;
-	}
-	//tableName = name of table to search
-	//where = condition to search on
+	public boolean deleteUser(deleteUser(User user) {
+        int id = user.getUserId();
+        try {
+            PreparedStatement stmt = con.prepareStatement("DELETE FROM MYSQLUSER WHERE ID = ?");
+
+            stmt.setInt(1, id);
+            return stmt.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+
 	@Override
-	public User findUser(String tableName, string where) {
- 		Connection con = MySQLDAOFactory.createConnection(DBURL);
-                String query = "Select * from " + tableName + " where " + where;
-		Statement stmt = con.createStatement();
-		User u = null;
-		try {
-			ResultSet res = stmt.executeUpdate(query);
-			while (res.next()) {
-				u = new User();
-				u.setUserId(res.getInt("userId"));
-				u.setName(res.getString("name"));
-				u.setStreetAddress(res.getString("streetAddress"));
-				u.setCity(res.getString("city"));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
-		con.close();
-		return u;
-	}
-	//tableName = name of table to update
-	//values = String[4] of new values leave null if not updating column [userId, name, streetAddress, city]
-	//where = condition to update
+	public User findUser(int newCustNo) {
+        User user = new User();
+        int id = -1;
+        String address = "";
+        String name = "";
+        String city = "";
+        try {
+            Statement sta = con.createStatement();
+
+            ResultSet res = sta.executeQuery(
+                    "SELECT * FROM MYSQLUSER WHERE ID = " + newCustNo);
+
+            while (res.next()) {
+                id = res.getInt("ID");
+                address = res.getString("ADDRESS");
+                name = res.getString("NAME");
+                city = res.getString("CITY");
+            }
+            res.close();
+            sta.close();
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+        }
+        user.setUserId(id);
+        user.setName(name);
+        user.setStreetAddress(address);
+        user.setCity(city);
+        return user;
+    }
+
 	@Override
-	public boolean updateUser(String tableName, String[] values, String where) {
-		if (values.length != 4|| (values[0] == null && values[1] == null && values[2] == null && values[3] == null)) {
-			System.out.println("values is not correct length or all inputs are null");
-			return false;
-		}
-		Connection con = MySQLDAOFactory.createConnection(DBURL);
-		Statement stmt = con.createStatement();
-		String query = "update " + tableName + " set ";
-		if (values[0] != null) {
-			query = query + "userId = " + values[0];
-			if (values[1] != null || values[2] != null || values[3] != null) {
-				query = query + ", ";
-			}
-		}
-                if (values[1] != null) {
-			query = query + "name = " + values[1];
-		      	if (values[2] != null || values[3] != null) {
-				query = query + ", ";
-			}
-		}
-                if (values[2] != null) {
-                        query = query + "streetAddress = " + values[2];
-                        if (values[3] != null) {
-		     		query = query + ", ";
-			}
-                }
-                if (values[3] != null) {
-	                query = query + "city = " + values[3];
-		}
-		query = query + " where " + where;
-		try {
-			stmt.executeUpdate(query);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		}
-		con.close();
-		return true;
-	}
+	public boolean updateUser(User user) {
+        try {
+            Statement stmt = con.createStatement();
+            int id = user.getUserId();
+            String newName = user.getName();
+            String newAddress = user.getStreetAddress();
+            String newCity = user.getCity();
+            PreparedStatement preparedStatement = con.prepareStatement("UPDATE MYSQLUSER SET NAME = ? , ADDRESS = ?, CITY = ? WHERE ID = ?");
+            preparedStatement.setString(1, newName);
+            preparedStatement.setString(2, newAddress);
+            preparedStatement.setString(3, newCity);
+            preparedStatement.setInt(4, id);
+            return preparedStatement.executeUpdate() > 0;
+
+        }catch (SQLException throwables) {
+            LOGGER.error(throwables.getMessage());
+        }
+
+        return false;
+    }
+
 	@Override
-	public RowSet selectUserRS(String tableName, String where) {
-		Connection con = MySQLDAOFactory.createConnection(DBURL);
-		JdbcRowSet rs = new JdbcRowSetImpl(con);
-		rs.setType(ResultSet.TYPE_SCROLL_INSENSITIVE);
-		String query = "Select * from " + tableName + " where " + where;
-		try {
-			rs.setCommand(query);
-			rs.execute();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
-		con.close();
-		return rs;
-	}
+	public RowSet selectUserRS(String criteriaCol, String criteria) {
+        ResultSet res = null;
+        try {
+            Statement sta = con.createStatement();
+            res = sta.executeQuery("SELECT ID, Address, Name, City FROM MYSQLUSER WHERE "+criteriaCol+" = '" + criteria + "'");
+
+            res.close();
+            sta.close();
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+        }
+        return res;
+    }
+
+    @Override
+    public Collection selectUsersTO(String criteriaCol, String criteria) {
+        ArrayList<User> selectedUsers = new ArrayList<>();
+
+        try {
+            Statement sta = con.createStatement();
+            ResultSet res = sta.executeQuery("SELECT ID, Address, Name, City FROM MYSQLUSER WHERE "+criteriaCol+" = '" + criteria + "'");
+
+            while (res.next()) {
+                User user = new User();
+                user.setUserId(res.getInt("ID"));
+                user.setStreetAddress(res.getString("ADDRESS"));
+                user.setName(res.getString("NAME"));
+                user.setCity(res.getString("CITY"));
+                selectedUsers.add(user);
+
+            }
+            res.close();
+            sta.close();
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+        }
+        return selectedUsers;
+    }
 
 }

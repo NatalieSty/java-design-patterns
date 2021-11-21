@@ -1,9 +1,5 @@
 package com.iluwatar.daofactory;
 
-import javax.sql.RowSet;
-import javax.sql.rowset.JdbcRowSet;
-import javax.sql.RowSet;
-import javax.sql.rowset.BaseRowSet;
 import java.util.*;
 import java.sql.*;
 import java.util.function.BiPredicate;

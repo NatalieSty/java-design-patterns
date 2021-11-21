@@ -18,7 +18,7 @@ public abstract class DAOFactory {
             case DERBY:
                 return new DerbyDAOFactory();
             case MYSQL    :
-//                return new OracleDAOFactory();
+                return new MySQLDAOFactory();
             case MONGO    :
 //                return new SybaseDAOFactory();
             default        :
