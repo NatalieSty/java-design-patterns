@@ -6,7 +6,7 @@ import java.sql.*;
 import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MySQLUserDAO implements UserDAO {
-	Connectioncon = MySQLDAOFactory.createConnection();
+	Connection con = MySQLDAOFactory.createConnection();
 	public MySQLUserDAO() {
 		 String SQL_CREATE = "CREATE TABLE MYSQLUSER"
                 + "("
@@ -54,7 +54,7 @@ public class MySQLUserDAO implements UserDAO {
 	//tableName = name of table to delete from
 	//where = where condition for deletion
 	@Override
-	public boolean deleteUser(deleteUser(User user) {
+	public boolean deleteUser(User user) {
         int id = user.getUserId();
         try {
             PreparedStatement stmt = con.prepareStatement("DELETE FROM MYSQLUSER WHERE ID = ?");
