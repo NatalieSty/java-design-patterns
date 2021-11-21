@@ -8,7 +8,7 @@ public class MySQLDAOFactory extends DAOFactory {
 		Connection con = null;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			String dburl = "jdbc:mysql:dao-factory/MySQLDB;create=true"
+			String dburl = "jdbc:mysql:dao-factory/MySQLDB;create=true";
 			con = DriverManager.getConnection(dburl);
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -18,7 +18,9 @@ public class MySQLDAOFactory extends DAOFactory {
 		}
 		return con;
 	}
-	public UserDao getUserDao() {
-		return new MySQLUserDao();
+
+	@Override
+	public UserDAO getUserDAO() {
+		return null;
 	}
 }

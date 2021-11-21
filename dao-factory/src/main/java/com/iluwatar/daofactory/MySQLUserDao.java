@@ -1,13 +1,14 @@
 package com.iluwatar.daofactory;
 
 import javax.sql.RowSet;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.sql.*;
 import lombok.extern.slf4j.Slf4j;
 @Slf4j
-public class MySQLUserDAO implements UserDAO {
+public class MySQLUserDao implements UserDAO {
 	Connection con = MySQLDAOFactory.createConnection();
-	public MySQLUserDAO() {
+	public MySQLUserDao() {
 		 String SQL_CREATE = "CREATE TABLE MYSQLUSER"
                 + "("
                 + " ID INT NOT NULL PRIMARY KEY,"
@@ -124,7 +125,7 @@ public class MySQLUserDAO implements UserDAO {
     }
 
 	@Override
-	public RowSet selectUserRS(String criteriaCol, String criteria) {
+	public ResultSet selectUserRS(String criteriaCol, String criteria) {
         ResultSet res = null;
         try {
             Statement sta = con.createStatement();
