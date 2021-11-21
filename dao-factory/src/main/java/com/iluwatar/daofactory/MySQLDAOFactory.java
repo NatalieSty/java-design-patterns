@@ -8,8 +8,8 @@ public class MySQLDAOFactory extends DAOFactory {
 		Connection con = null;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			String dburl = "jdbc:mysql://localhost:3306/dao-factory?createDatabaseIfNotExist=true";
-			con = DriverManager.getConnection(dburl, "root", "");
+			String dburl = "jdbc:mysql://127.0.0.1/mysqldb?useSSL=false&createDatabaseIfNotExist=true";
+			con = DriverManager.getConnection(dburl, "root", "password");
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		} catch (ClassNotFoundException e) {
