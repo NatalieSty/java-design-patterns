@@ -24,10 +24,11 @@ public class MySQLUserDaoTest {
         this.con = MySQLDAOFactory.createConnection();
         String SQL_CREATE = "CREATE TABLE MYSQLUSER"
                 + "("
-                + " ID INTEGER NOT NULL PRIMARY KEY,"
+                + " ID INT NOT NULL AUTO_INCREMENT,"
                 + " NAME VARCHAR(140) NOT NULL,"
                 + " ADDRESS VARCHAR(140) NOT NULL,"
-                + " CITY VARCHAR(140) NOT NULL"
+                + " CITY VARCHAR(140) NOT NULL,"
+                + " PRIMARY KEY ( ID ) "
                 + ")";
         //Creating the Statement object
         try {

@@ -9,12 +9,13 @@ import lombok.extern.slf4j.Slf4j;
 public class MySQLUserDao implements UserDAO {
 	Connection con = MySQLDAOFactory.createConnection();
 	public MySQLUserDao() {
-		 String SQL_CREATE = "CREATE TABLE MYSQLUSER"
+		 String SQL_CREATE =  "CREATE TABLE MYSQLUSER"
                 + "("
-                + " ID INT NOT NULL PRIMARY KEY,"
+                + " ID INT NOT NULL AUTO_INCREMENT,"
                 + " NAME VARCHAR(140) NOT NULL,"
                 + " ADDRESS VARCHAR(140) NOT NULL,"
-                + " CITY VARCHAR(140) NOT NULL"
+                + " CITY VARCHAR(140) NOT NULL,"
+                + " PRIMARY KEY ( ID ) "
                 + ")";
         //Creating the Statement object
         try {
