@@ -20,7 +20,7 @@ public abstract class DAOFactory {
             case MYSQL    :
                 return new MySQLDAOFactory();
             case MONGO    :
-//                return new SybaseDAOFactory();
+                return new MongoDAOFactory();
             default        :
                 return null;
         }
