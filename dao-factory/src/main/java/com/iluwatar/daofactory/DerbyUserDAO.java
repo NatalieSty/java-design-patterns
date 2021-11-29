@@ -150,24 +150,6 @@ public class DerbyUserDAO implements UserDAO{
     }
 
     @Override
-    public ResultSet selectUserRS(String criteriaCol, String criteria) {
-        // implement search customers here using the
-        // supplied criteria.
-        // Return a RowSet.
-        ResultSet res = null;
-        try {
-            Statement sta = con.createStatement();
-            res = sta.executeQuery("SELECT ID, Address, Name, City FROM DERBYUSER WHERE "+criteriaCol+" = '" + criteria + "'");
-
-            res.close();
-            sta.close();
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage());
-        }
-        return res;
-    }
-
-    @Override
     public Collection selectUsersTO(String criteriaCol, String criteria) {
         // implement search customers here using the
         // supplied criteria.

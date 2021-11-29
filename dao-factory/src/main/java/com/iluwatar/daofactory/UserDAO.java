@@ -12,6 +12,5 @@ public interface UserDAO {
     boolean deleteUser(User user);
     User findUser(int newUserNo);
     boolean updateUser(User user);
-    String selectUserRS(String criteriaCol, String criteria);
     Collection selectUsersTO(String criteriaCol, String criteria);
 }

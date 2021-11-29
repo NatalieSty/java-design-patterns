@@ -62,24 +62,7 @@ public class MongoUserDAO implements UserDAO {
         collection.updateOne(filter, updates);
         return true;
     }
-    @Override
-    public String selectUserRS(String criteriaCol, String criteria) {
-        FindIterable<Document> iterable = collection.find(eq(criteriaCol, criteria)).projection(
-                new Document("_id", 0).append("userid", 1).append("name", 1).append("city", 1).append("streetAddress", 1)
-        );
-        MongoCursor<Document> cursor = iterable.iterator();
-        StringBuilder sb = new StringBuilder();
-        sb.append("[");
-        while(cursor.hasNext()) {
-            sb.append(cursor.next().toJson());
-            if (cursor.hasNext()) {
-                sb.append(",");
-            }
-        }
-        sb.append("]");
-        cursor.close();
-        return sb.toString();
-    }
+
     @Override
     public Collection selectUsersTO(String criteriaCol, String criteria) {
         FindIterable<Document> iterable = collection.find(eq(criteriaCol, criteria));
