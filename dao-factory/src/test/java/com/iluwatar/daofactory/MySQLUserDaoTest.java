@@ -129,22 +129,6 @@ public class MySQLUserDaoTest {
                 assertTrue(result);
             }
 
-            @Test
-            void selectUserRSWithMoreUsers() throws Exception {
-                final var newName = "Bernard GG";
-                final var newAddress = "444 3th AVE";
-                final var newCity = "Seattle";
-                final var newUser = new User();
-                newUser.setUserId(user.getUserId());
-                newUser.setName(newName);
-                newUser.setStreetAddress(newAddress);
-                newUser.setCity(newCity);
-                dao.insertUser(newUser);
-                final String criteriaCol = "CITY";
-                final String criteria = "Seattle";
-                ResultSet rs = dao.selectUserRS(criteriaCol, criteria);
-                assertNotNull(rs);
-            }
 
             @Test
             void selectUserTOWithMoreUsers() throws Exception {

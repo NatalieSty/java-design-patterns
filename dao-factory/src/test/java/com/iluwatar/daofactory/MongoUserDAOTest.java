@@ -83,12 +83,6 @@ public class MongoUserDAOTest {
         }
 
         @Test
-        void selectRSTest() {
-            String jsonOutput = dao.selectUserRS("city", "Somewhere");
-            assertEquals(jsonOutput, "[{ \"userid\" : 1, \"name\" : \"John Smith\", \"city\" : \"Somewhere\", \"streetAddress\" : \"123 Anywhere Street\" },{ \"userid\" : 2, \"name\" : \"Sam Smith\", \"city\" : \"Somewhere\", \"streetAddress\" : \"456 Nowhere Street\" }]");
-        }
-
-        @Test
         void selectUsersTOTest() {
             ArrayList<User> selectedUsers = (ArrayList<User>) dao.selectUsersTO("city", "Somewhere");
             assertEquals(selectedUsers.size(), 2);
