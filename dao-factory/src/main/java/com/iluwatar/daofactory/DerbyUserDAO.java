@@ -2,10 +2,6 @@ package com.iluwatar.daofactory;
 
 import java.util.*;
 import java.sql.*;
-import java.util.function.BiPredicate;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 import lombok.extern.slf4j.Slf4j;
 
 
