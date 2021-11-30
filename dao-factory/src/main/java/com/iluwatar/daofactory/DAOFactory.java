@@ -3,8 +3,8 @@ package com.iluwatar.daofactory;
 public abstract class DAOFactory {
     // List of DAO types supported by the factory
     public static final int DERBY = 1;
-    public static final int MYSQL = 2;
-    public static final int MONGO = 3;
+//    public static final int MYSQL = 2;
+    public static final int MONGO = 2;
 
     // There will be a method for each DAO that can be
     // created. The concrete factories will have to
@@ -17,8 +17,6 @@ public abstract class DAOFactory {
         switch (whichFactory) {
             case DERBY:
                 return new DerbyDAOFactory();
-            case MYSQL    :
-                return new MySQLDAOFactory();
             case MONGO    :
                 return new MongoDAOFactory();
             default        :
