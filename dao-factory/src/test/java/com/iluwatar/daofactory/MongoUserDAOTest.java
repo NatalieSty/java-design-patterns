@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class MongoUserDAOTest {
     MongoUserDAO dao;
     User u;
-    
+
     @BeforeEach
     public void init() {
         DAOFactory mongoFactory = DAOFactory.getDAOFactory(DAOFactory.MONGO);
@@ -21,6 +21,7 @@ public class MongoUserDAOTest {
         u.setCity("Somewhere");
         u.setStreetAddress("123 Anywhere Street");
     }
+
     // Test basic CRUD operations
     @Nested
     class BasicTests {
