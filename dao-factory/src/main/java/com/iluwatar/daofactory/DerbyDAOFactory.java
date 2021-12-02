@@ -22,7 +22,7 @@ public class DerbyDAOFactory extends DAOFactory {
             }
 
         } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+            LOGGER.error(ex.getMessage());
         }
         return conn1;
     }

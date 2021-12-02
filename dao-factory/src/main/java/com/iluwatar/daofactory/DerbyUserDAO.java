@@ -2,6 +2,7 @@ package com.iluwatar.daofactory;
 
 import java.util.*;
 import java.sql.*;
+
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -22,18 +23,17 @@ public class DerbyUserDAO implements UserDAO{
      * Creates a table DERBYUSER in DerbyDB.
      */
     public DerbyUserDAO() {
-        String SQL_CREATE = "CREATE TABLE DERBYUSER"
+        final String SQL_CREATE = "CREATE TABLE DERBYUSER"
                 + "("
                 + " ID INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY(Start with 1, Increment by 1),"
                 + " NAME VARCHAR(140) NOT NULL,"
                 + " ADDRESS VARCHAR(140) NOT NULL,"
                 + " CITY VARCHAR(140) NOT NULL"
                 + ")";
-        Statement stmt = null;
-        try {
-            DatabaseMetaData dbm = con.getMetaData();
-            stmt = con.createStatement();
-            ResultSet rs = dbm.getTables(null, "APP", "DERBYUSER", null);
+
+        try (Statement stmt = con.createStatement();) {
+            final DatabaseMetaData dbm = con.getMetaData();
+            final ResultSet rs = dbm.getTables(null, "APP", "DERBYUSER", null);
             if (!rs.next()) {
                 stmt.execute(SQL_CREATE);
                 LOGGER.info("Table created");
@@ -42,15 +42,7 @@ public class DerbyUserDAO implements UserDAO{
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            if (stmt != null) {
-                try {
-                    stmt.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
+            LOGGER.error(e.getMessage());
         }
     }
 
@@ -61,32 +53,22 @@ public class DerbyUserDAO implements UserDAO{
      * @return newly created user number or -1 on error
      */
     @Override
-    public int insertUser(User user) {
+    public int insertUser(final User user) {
         int last_inserted_id = -1;
-        PreparedStatement statement = null;
-        try {
-            statement =
-                con.prepareStatement("INSERT INTO DERBYUSER(NAME, ADDRESS, CITY) " +
-                    "VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS);
+        try (PreparedStatement statement = con.prepareStatement("INSERT INTO DERBYUSER(NAME, ADDRESS, CITY) " +
+            "VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS);) {
+
             statement.setString(1, user.getName());
             statement.setString(2, user.getStreetAddress());
             statement.setString(3, user.getCity());
             statement.execute();
-            ResultSet rs = statement.getGeneratedKeys();
+            final ResultSet rs = statement.getGeneratedKeys();
             if (rs.next()) {
                 last_inserted_id = rs.getInt(1);
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
+            LOGGER.error(e.getMessage());
         }
         return last_inserted_id;
     }
@@ -98,26 +80,16 @@ public class DerbyUserDAO implements UserDAO{
      * @return true on success, false on failure
      */
     @Override
-    public boolean deleteUser(User user) {
+    public boolean deleteUser(final User user) {
 
-        int id = user.getUserId();
-        PreparedStatement stmt = null;
-        try {
-            stmt = con.prepareStatement("DELETE FROM DERBYUSER WHERE ID = ?");
+        final int id = user.getUserId();
+        try (PreparedStatement stmt =con.prepareStatement("DELETE FROM DERBYUSER WHERE ID = ?");) {
 
             stmt.setInt(1, id);
             return stmt.executeUpdate() > 0;
 
         } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            if (stmt != null) {
-                try {
-                    stmt.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
+            LOGGER.error(e.getMessage());
         }
 
         return false;
@@ -130,19 +102,16 @@ public class DerbyUserDAO implements UserDAO{
      * @return a User Object if found, return null on error or if not found
      */
     @Override
-    public User findUser(int userId) {
+    public User findUser(final int userId) {
 
-        User user = new User();
+        final User user = new User();
         int id = -1;
         String address = "";
         String name = "";
         String city = "";
-        Statement sta = null;
-        ResultSet res = null;
-        try {
-            sta = con.createStatement();
-            res = sta.executeQuery(
-                    "SELECT * FROM DERBYUSER WHERE ID = " + userId);
+        try (Statement sta = con.createStatement();
+             ResultSet res = sta.executeQuery(
+            "SELECT * FROM DERBYUSER WHERE ID = " + userId);) {
 
             while (res.next()) {
                 id = res.getInt("ID");
@@ -154,21 +123,6 @@ public class DerbyUserDAO implements UserDAO{
             sta.close();
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-        } finally {
-            if (sta != null) {
-                try {
-                    sta.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (res != null) {
-                try {
-                    res.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
         }
         user.setUserId(id);
         user.setName(name);
@@ -184,18 +138,16 @@ public class DerbyUserDAO implements UserDAO{
      * @return true on success, false on failure or error
      */
     @Override
-    public boolean updateUser(User user) {
-        Statement stmt = null;
-        PreparedStatement preparedStatement = null;
-        try {
-            stmt = con.createStatement();
-            int id = user.getUserId();
-            String newName = user.getName();
-            String newAddress = user.getStreetAddress();
-            String newCity = user.getCity();
-            preparedStatement =
-                con.prepareStatement("UPDATE DERBYUSER SET NAME = ? , " +
-                    "ADDRESS = ?, CITY = ? WHERE ID = ?");
+    public boolean updateUser(final User user) {
+        try (Statement stmt = con.createStatement();
+             PreparedStatement preparedStatement =
+                 con.prepareStatement("UPDATE DERBYUSER SET NAME = ? , " +
+                 "ADDRESS = ?, CITY = ? WHERE ID = ?");) {
+            final int id = user.getUserId();
+            final String newName = user.getName();
+            final String newAddress = user.getStreetAddress();
+            final String newCity = user.getCity();
+
             preparedStatement.setString(1, newName);
             preparedStatement.setString(2, newAddress);
             preparedStatement.setString(3, newCity);
@@ -204,21 +156,6 @@ public class DerbyUserDAO implements UserDAO{
 
         }catch (SQLException throwables) {
             LOGGER.error(throwables.getMessage());
-        } finally {
-            if (stmt != null) {
-                try {
-                    stmt.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (preparedStatement != null) {
-                try {
-                    preparedStatement.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
         }
 
         return false;
@@ -231,17 +168,15 @@ public class DerbyUserDAO implements UserDAO{
      * @return Collection of users found using the criteria
      */
     @Override
-    public Collection selectUsersTO(String criteriaCol, String criteria) {
-        ArrayList<User> selectedUsers = new ArrayList<>();
-        Statement sta = null;
-        ResultSet res = null;
-        try {
-            sta = con.createStatement();
-            res = sta.executeQuery("SELECT ID, Address, Name, City " +
-                "FROM DERBYUSER WHERE "+criteriaCol+" = '" + criteria + "'");
+    public Collection selectUsersTO(final String criteriaCol, final String criteria) {
+        final ArrayList<User> selectedUsers = new ArrayList<>();
+
+        try (Statement sta = con.createStatement();
+             ResultSet res = sta.executeQuery("SELECT ID, Address, Name, City " +
+            "FROM DERBYUSER WHERE "+criteriaCol+" = '" + criteria + "'");) {
 
             while (res.next()) {
-                User user = new User();
+                final User user = new User();
                 user.setUserId(res.getInt("ID"));
                 user.setStreetAddress(res.getString("ADDRESS"));
                 user.setName(res.getString("NAME"));
@@ -253,22 +188,8 @@ public class DerbyUserDAO implements UserDAO{
             sta.close();
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-        } finally {
-            if (res != null) {
-                try {
-                    res.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (sta != null) {
-                try {
-                    sta.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
         }
+
         return selectedUsers;
     }
 

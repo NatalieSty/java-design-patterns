@@ -14,7 +14,7 @@ public abstract class DAOFactory {
      * @return a DAOFactory
      */
     public static DAOFactory getDAOFactory(
-            int whichFactory) {
+            final int whichFactory) {
 
         switch (whichFactory) {
             case DERBY    :

@@ -10,42 +10,42 @@ public class App {
      *
      * @param args command line args
      */
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         // create the required DAO Factory
-        DAOFactory derbyFactory = DAOFactory.getDAOFactory(DAOFactory.DERBY);
+        final DAOFactory derbyFactory = DAOFactory.getDAOFactory(DAOFactory.DERBY);
 
         // Create a DAO for Derby
-        UserDAO derbyUserDAO = derbyFactory.getUserDAO();
+        final UserDAO derbyUserDAO = derbyFactory.getUserDAO();
         DerbyDAOFactory.createConnection();
 
         // create, update, find a customer, or search by criteria
-        int userId = createUser(derbyUserDAO);
-        User user = findUser(userId, derbyUserDAO);
+        final int userId = createUser(derbyUserDAO);
+        final User user = findUser(userId, derbyUserDAO);
         updateUser(user, derbyUserDAO);
         deleteUser(user, derbyUserDAO);
-        String criteriaCol = "City";
-        String criteria = "Seattle";
+        final String criteriaCol = "City";
+        final String criteria = "Seattle";
         findUserWithCriteria(derbyUserDAO, criteriaCol, criteria);
 
     }
 
-    private static int createUser(UserDAO userDAO){
-        User u = new User();
+    private static int createUser(final UserDAO userDAO){
+        final User u = new User();
         u.setName("Sam Doe");
         u.setStreetAddress("333 4th Street");
         u.setCity("Seattle");
-        int newCustNo = userDAO.insertUser(u);
+//        final int newCustNo = userDAO.insertUser(u);
 
-        return newCustNo;
+        return userDAO.insertUser(u);
     }
 
-    private static User findUser(int id, UserDAO userDAO){
-        User user = userDAO.findUser(id);
+    private static User findUser(final int id, final UserDAO userDAO){
+        final User user = userDAO.findUser(id);
         LOGGER.info("User Created: " + user.getUserId());
         return user;
     }
 
-    private static User updateUser(User user, UserDAO userDAO){
+    private static User updateUser(final User user, final UserDAO userDAO){
         user.setStreetAddress("12345 8th Street");
         user.setName("Sam Smith");
         user.setCity("York");
@@ -54,15 +54,15 @@ public class App {
         return user;
     }
 
-    private static void deleteUser(User user, UserDAO userDAO){
+    private static void deleteUser(final User user, final UserDAO userDAO){
         userDAO.deleteUser(user);
         LOGGER.info("User Deleted: " + user.getUserId());
     }
 
-    private static void findUserWithCriteria(UserDAO userDAO, String criteriaCol, String criteria){
-        Collection<User> userList = userDAO.selectUsersTO(criteriaCol, criteria);
+    private static void findUserWithCriteria(final UserDAO userDAO, final String criteriaCol, final String criteria){
+        final Collection<User> userList = userDAO.selectUsersTO(criteriaCol, criteria);
         LOGGER.info("Found "+ userList.size() +" Users With "+criteriaCol+ " = "+criteria+":");
-        for (User i: userList){
+        for (final User i: userList){
             LOGGER.info("User "+i.getUserId());
         }
     }

@@ -32,7 +32,7 @@ public class MongoUserDAO implements UserDAO {
      * Creates and connect to Mongo
      */
     public MongoUserDAO() {
-        Object[] clientAndServer = MongoDAOFactory.create();
+        final Object[] clientAndServer = MongoDAOFactory.create();
         client = (MongoClient) clientAndServer[0];
         server = (MongoServer) clientAndServer[1];
         collection = client.getDatabase("mongo").getCollection("coll");
@@ -45,8 +45,8 @@ public class MongoUserDAO implements UserDAO {
      * @return newly created user number or -1 on error
      */
     @Override
-    public int insertUser(User user) {
-        Document insUser = new Document("_id", new ObjectId());
+    public int insertUser(final User user) {
+        final Document insUser = new Document("_id", new ObjectId());
         insUser.append("name", user.getName())
                 .append("userid", user.getUserId())
                 .append("city", user.getCity())
@@ -62,8 +62,8 @@ public class MongoUserDAO implements UserDAO {
      * @return true on success, false on failure
      */
     @Override
-    public boolean deleteUser(User user) {
-        Bson filter = eq("userid", user.getUserId());
+    public boolean deleteUser(final User user) {
+        final Bson filter = eq("userid", user.getUserId());
         collection.deleteOne(filter);
         return true;
     }
@@ -75,9 +75,9 @@ public class MongoUserDAO implements UserDAO {
      * @return a User Object if found, return null on error or if not found
      */
     @Override
-    public User findUser(int userId) {
-        User user = new User();
-        Document dbuser = collection.find(new Document("userid", userId)).first();
+    public User findUser(final int userId) {
+        final User user = new User();
+        final Document dbuser = collection.find(new Document("userid", userId)).first();
         user.setUserId((Integer) dbuser.get("userid"));
         user.setName((String) dbuser.get("name"));
         user.setCity((String) dbuser.get("city"));
@@ -92,13 +92,13 @@ public class MongoUserDAO implements UserDAO {
      * @return true on success, false on failure or error
      */
     @Override
-    public boolean updateUser(User user) {
-        Bson filter = eq("userid", user.getUserId());
-        Bson updateUserId = set("userid", user.getUserId());
-        Bson updateName = set("name", user.getName());
-        Bson updateCity = set("city", user.getCity());
-        Bson updateStreetAddress = set("streetAddress", user.getStreetAddress());
-        Bson updates = combine(updateUserId, updateName, updateCity, updateStreetAddress);
+    public boolean updateUser(final User user) {
+        final Bson filter = eq("userid", user.getUserId());
+        final Bson updateUserId = set("userid", user.getUserId());
+        final Bson updateName = set("name", user.getName());
+        final Bson updateCity = set("city", user.getCity());
+        final Bson updateStreetAddress = set("streetAddress", user.getStreetAddress());
+        final Bson updates = combine(updateUserId, updateName, updateCity, updateStreetAddress);
         collection.updateOne(filter, updates);
         return true;
     }
@@ -110,13 +110,13 @@ public class MongoUserDAO implements UserDAO {
      * @return Collection of users found using the criteria
      */
     @Override
-    public Collection selectUsersTO(String criteriaCol, String criteria) {
-        FindIterable<Document> iterable = collection.find(eq(criteriaCol, criteria));
-        MongoCursor<Document> cursor = iterable.iterator();
-        ArrayList<User> selectedUsers = new ArrayList<>();
+    public Collection selectUsersTO(final String criteriaCol, final String criteria) {
+        final FindIterable<Document> iterable = collection.find(eq(criteriaCol, criteria));
+        final MongoCursor<Document> cursor = iterable.iterator();
+        final ArrayList<User> selectedUsers = new ArrayList<>();
         while(cursor.hasNext()) {
-            User u = new User();
-            Document d = cursor.next();
+            final User u = new User();
+            final Document d = cursor.next();
             u.setUserId((Integer) d.get("userid"));
             u.setName((String) d.get("name"));
             u.setCity((String) d.get("city"));

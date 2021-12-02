@@ -12,10 +12,10 @@ public class MongoDAOFactory extends DAOFactory {
      * @return a Connection
      */
     public static Object[] create() {
-        MongoServer server = new MongoServer(new MemoryBackend());
-        InetSocketAddress serverAddress = server.bind();
-        MongoClient client = new MongoClient(new ServerAddress(serverAddress));
-        Object[] clientAndServer = {client, server};
+        final MongoServer server = new MongoServer(new MemoryBackend());
+        final InetSocketAddress serverAddress = server.bind();
+        final MongoClient client = new MongoClient(new ServerAddress(serverAddress));
+        final Object[] clientAndServer = {client, server};
         return clientAndServer;
     }
 

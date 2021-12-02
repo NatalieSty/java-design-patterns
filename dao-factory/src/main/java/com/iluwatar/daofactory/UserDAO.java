@@ -5,9 +5,6 @@ package com.iluwatar.daofactory;
  *
  */
 
-import javax.sql.RowSet;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Collection;
 
 public interface UserDAO {
