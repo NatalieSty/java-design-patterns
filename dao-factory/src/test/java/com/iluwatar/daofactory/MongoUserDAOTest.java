@@ -6,9 +6,11 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
+
 public class MongoUserDAOTest {
     MongoUserDAO dao;
     User u;
+    
     @BeforeEach
     public void init() {
         DAOFactory mongoFactory = DAOFactory.getDAOFactory(DAOFactory.MONGO);

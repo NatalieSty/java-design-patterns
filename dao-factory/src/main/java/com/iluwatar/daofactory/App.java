@@ -1,8 +1,5 @@
 package com.iluwatar.daofactory;
 
-import javax.sql.RowSet;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Collection;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,6 +17,7 @@ public class App {
         // Create a DAO for Derby
         UserDAO derbyUserDAO = derbyFactory.getUserDAO();
         DerbyDAOFactory.createConnection();
+
         // create, update, find a customer, or search by criteria
         int userId = createUser(derbyUserDAO);
         User user = findUser(userId, derbyUserDAO);

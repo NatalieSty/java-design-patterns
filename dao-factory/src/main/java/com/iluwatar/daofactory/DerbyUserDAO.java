@@ -5,17 +5,23 @@ import java.sql.*;
 import lombok.extern.slf4j.Slf4j;
 
 
-// CloudscapeCustomerDAO implementation of the
-// CustomerDAO interface. This class can contain all
-// Cloudscape specific code and SQL statements.
-// The client is thus shielded from knowing
-// these implementation details.
+
+/**
+ * DerbyUserDAO implementation of the
+ * UserDAO interface. This class can contain all
+ * Derby specific code and SQL statements.
+ * The client is thus shielded from knowing
+ * these implementation details.
+ *
+ */
 @Slf4j
 public class DerbyUserDAO implements UserDAO{
     Connection con = DerbyDAOFactory.createConnection();
-    public DerbyUserDAO() {
-        // initialization
 
+    /**
+     * Creates a table DERBYUSER in DerbyDB.
+     */
+    public DerbyUserDAO() {
         String SQL_CREATE = "CREATE TABLE DERBYUSER"
                 + "("
                 + " ID INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY(Start with 1, Increment by 1),"
@@ -23,7 +29,6 @@ public class DerbyUserDAO implements UserDAO{
                 + " ADDRESS VARCHAR(140) NOT NULL,"
                 + " CITY VARCHAR(140) NOT NULL"
                 + ")";
-        //Creating the Statement object
         try {
             DatabaseMetaData dbm = con.getMetaData();
             Statement stmt = con.createStatement();
@@ -39,17 +44,20 @@ public class DerbyUserDAO implements UserDAO{
             e.printStackTrace();
         }
     }
-    // The following methods can use
-    // CloudscapeDAOFactory.createConnection()
-    // to get a connection as required
+
+    /**
+     * Insert user to DerbyUser.
+     *
+     * @param user
+     * @return newly created user number or -1 on error
+     */
     @Override
     public int insertUser(User user) {
-        // Implement insert user here.
-        // Return newly created user number
-        // or a -1 on error
         int last_inserted_id = -1;
         try {
-            PreparedStatement statement = con.prepareStatement("INSERT INTO DERBYUSER(NAME, ADDRESS, CITY) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement statement =
+                con.prepareStatement("INSERT INTO DERBYUSER(NAME, ADDRESS, CITY) " +
+                    "VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, user.getName());
             statement.setString(2, user.getStreetAddress());
             statement.setString(3, user.getCity());
@@ -65,10 +73,15 @@ public class DerbyUserDAO implements UserDAO{
         return last_inserted_id;
     }
 
+    /**
+     * Delete user in DerbyUser.
+     *
+     * @param user
+     * @return true on success, false on failure
+     */
     @Override
     public boolean deleteUser(User user) {
-        // Implement delete customer here
-        // Return true on success, false on failure
+
         int id = user.getUserId();
         try {
             PreparedStatement stmt = con.prepareStatement("DELETE FROM DERBYUSER WHERE ID = ?");
@@ -83,12 +96,15 @@ public class DerbyUserDAO implements UserDAO{
         return false;
     }
 
+    /**
+     * Find a user in DerbyUser using userId.
+     *
+     * @param userId
+     * @return a User Object if found, return null on error or if not found
+     */
     @Override
-    public User findUser(int newCustNo) {
-        // Implement find a customer here using supplied
-        // argument values as search criteria
-        // Return a Transfer Object if found,
-        // return null on error or if not found
+    public User findUser(int userId) {
+
         User user = new User();
         int id = -1;
         String address = "";
@@ -98,7 +114,7 @@ public class DerbyUserDAO implements UserDAO{
             Statement sta = con.createStatement();
 
             ResultSet res = sta.executeQuery(
-                    "SELECT * FROM DERBYUSER WHERE ID = " + newCustNo);
+                    "SELECT * FROM DERBYUSER WHERE ID = " + userId);
 
             while (res.next()) {
                 id = res.getInt("ID");
@@ -118,12 +134,14 @@ public class DerbyUserDAO implements UserDAO{
         return user;
     }
 
+    /**
+     * Update record here using data from the User Object
+     *
+     * @param user
+     * @return true on success, false on failure or error
+     */
     @Override
     public boolean updateUser(User user) {
-        // implement update record here using data
-        // from the customerData Transfer Object
-        // Return true on success, false on failure or
-        // error
 
         try {
             Statement stmt = con.createStatement();
@@ -131,7 +149,9 @@ public class DerbyUserDAO implements UserDAO{
             String newName = user.getName();
             String newAddress = user.getStreetAddress();
             String newCity = user.getCity();
-            PreparedStatement preparedStatement = con.prepareStatement("UPDATE DERBYUSER SET NAME = ? , ADDRESS = ?, CITY = ? WHERE ID = ?");
+            PreparedStatement preparedStatement =
+                con.prepareStatement("UPDATE DERBYUSER SET NAME = ? , " +
+                    "ADDRESS = ?, CITY = ? WHERE ID = ?");
             preparedStatement.setString(1, newName);
             preparedStatement.setString(2, newAddress);
             preparedStatement.setString(3, newCity);
@@ -145,17 +165,20 @@ public class DerbyUserDAO implements UserDAO{
         return false;
     }
 
+    /**
+     * Search users here using the supplied criteria.
+     *
+     * @param criteriaCol, criteria
+     * @return Collection of users found using the criteria
+     */
     @Override
     public Collection selectUsersTO(String criteriaCol, String criteria) {
-        // implement search customers here using the
-        // supplied criteria.
-        // Alternatively, implement to return a Collection
-        // of Transfer Objects.
         ArrayList<User> selectedUsers = new ArrayList<>();
 
         try {
             Statement sta = con.createStatement();
-            ResultSet res = sta.executeQuery("SELECT ID, Address, Name, City FROM DERBYUSER WHERE "+criteriaCol+" = '" + criteria + "'");
+            ResultSet res = sta.executeQuery("SELECT ID, Address, Name, City " +
+                "FROM DERBYUSER WHERE "+criteriaCol+" = '" + criteria + "'");
 
             while (res.next()) {
                 User user = new User();

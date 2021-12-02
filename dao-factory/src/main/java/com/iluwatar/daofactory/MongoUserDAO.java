@@ -15,16 +15,35 @@ import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.combine;
 import static com.mongodb.client.model.Updates.set;
 
+/**
+ * MongoUserDAO implementation of the
+ * UserDAO interface. This class can contain all
+ * Derby specific code and SQL statements.
+ * The client is thus shielded from knowing
+ * these implementation details.
+ *
+ */
 public class MongoUserDAO implements UserDAO {
     MongoClient client;
     MongoServer server;
     MongoCollection<Document> collection;
+
+    /**
+     * Creates and connect to Mongo
+     */
     public MongoUserDAO() {
         Object[] clientAndServer = MongoDAOFactory.create();
         client = (MongoClient) clientAndServer[0];
         server = (MongoServer) clientAndServer[1];
         collection = client.getDatabase("mongo").getCollection("coll");
     }
+
+    /**
+     * Insert user to mongo.
+     *
+     * @param user
+     * @return newly created user number or -1 on error
+     */
     @Override
     public int insertUser(User user) {
         Document insUser = new Document("_id", new ObjectId());
@@ -35,22 +54,43 @@ public class MongoUserDAO implements UserDAO {
         collection.insertOne(insUser);
         return user.getUserId();
     }
+
+    /**
+     * Delete user in mongo.
+     *
+     * @param user
+     * @return true on success, false on failure
+     */
     @Override
     public boolean deleteUser(User user) {
         Bson filter = eq("userid", user.getUserId());
         collection.deleteOne(filter);
         return true;
     }
+
+    /**
+     * Find a user in mongo using userId.
+     *
+     * @param userId
+     * @return a User Object if found, return null on error or if not found
+     */
     @Override
-    public User findUser(int userID) {
+    public User findUser(int userId) {
         User user = new User();
-        Document dbuser = collection.find(new Document("userid", userID)).first();
+        Document dbuser = collection.find(new Document("userid", userId)).first();
         user.setUserId((Integer) dbuser.get("userid"));
         user.setName((String) dbuser.get("name"));
         user.setCity((String) dbuser.get("city"));
         user.setStreetAddress((String) dbuser.get("streetAddress"));
         return user;
     }
+
+    /**
+     * Update record here using data from the User Object
+     *
+     * @param user
+     * @return true on success, false on failure or error
+     */
     @Override
     public boolean updateUser(User user) {
         Bson filter = eq("userid", user.getUserId());
@@ -63,6 +103,12 @@ public class MongoUserDAO implements UserDAO {
         return true;
     }
 
+    /**
+     * Search users here using the supplied criteria.
+     *
+     * @param criteriaCol, criteria
+     * @return Collection of users found using the criteria
+     */
     @Override
     public Collection selectUsersTO(String criteriaCol, String criteria) {
         FindIterable<Document> iterable = collection.find(eq(criteriaCol, criteria));
