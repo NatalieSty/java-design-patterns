@@ -1,6 +1,9 @@
 package com.iluwatar.daofactory;
 
-// Interface that all UserDAOs must support
+/**
+ * Interface that all UserDAOs must support
+ *
+ */
 
 import javax.sql.RowSet;
 import java.sql.ResultSet;
