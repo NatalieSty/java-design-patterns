@@ -29,9 +29,10 @@ public class DerbyUserDAO implements UserDAO{
                 + " ADDRESS VARCHAR(140) NOT NULL,"
                 + " CITY VARCHAR(140) NOT NULL"
                 + ")";
+        Statement stmt = null;
         try {
             DatabaseMetaData dbm = con.getMetaData();
-            Statement stmt = con.createStatement();
+            stmt = con.createStatement();
             ResultSet rs = dbm.getTables(null, "APP", "DERBYUSER", null);
             if (!rs.next()) {
                 stmt.execute(SQL_CREATE);
@@ -42,6 +43,14 @@ public class DerbyUserDAO implements UserDAO{
 
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
@@ -54,8 +63,9 @@ public class DerbyUserDAO implements UserDAO{
     @Override
     public int insertUser(User user) {
         int last_inserted_id = -1;
+        PreparedStatement statement = null;
         try {
-            PreparedStatement statement =
+            statement =
                 con.prepareStatement("INSERT INTO DERBYUSER(NAME, ADDRESS, CITY) " +
                     "VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, user.getName());
@@ -69,6 +79,14 @@ public class DerbyUserDAO implements UserDAO{
 
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return last_inserted_id;
     }
@@ -83,14 +101,23 @@ public class DerbyUserDAO implements UserDAO{
     public boolean deleteUser(User user) {
 
         int id = user.getUserId();
+        PreparedStatement stmt = null;
         try {
-            PreparedStatement stmt = con.prepareStatement("DELETE FROM DERBYUSER WHERE ID = ?");
+            stmt = con.prepareStatement("DELETE FROM DERBYUSER WHERE ID = ?");
 
             stmt.setInt(1, id);
             return stmt.executeUpdate() > 0;
 
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         return false;
@@ -110,10 +137,11 @@ public class DerbyUserDAO implements UserDAO{
         String address = "";
         String name = "";
         String city = "";
+        Statement sta = null;
+        ResultSet res = null;
         try {
-            Statement sta = con.createStatement();
-
-            ResultSet res = sta.executeQuery(
+            sta = con.createStatement();
+            res = sta.executeQuery(
                     "SELECT * FROM DERBYUSER WHERE ID = " + userId);
 
             while (res.next()) {
@@ -126,6 +154,21 @@ public class DerbyUserDAO implements UserDAO{
             sta.close();
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
+        } finally {
+            if (sta != null) {
+                try {
+                    sta.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         user.setUserId(id);
         user.setName(name);
@@ -142,14 +185,15 @@ public class DerbyUserDAO implements UserDAO{
      */
     @Override
     public boolean updateUser(User user) {
-
+        Statement stmt = null;
+        PreparedStatement preparedStatement = null;
         try {
-            Statement stmt = con.createStatement();
+            stmt = con.createStatement();
             int id = user.getUserId();
             String newName = user.getName();
             String newAddress = user.getStreetAddress();
             String newCity = user.getCity();
-            PreparedStatement preparedStatement =
+            preparedStatement =
                 con.prepareStatement("UPDATE DERBYUSER SET NAME = ? , " +
                     "ADDRESS = ?, CITY = ? WHERE ID = ?");
             preparedStatement.setString(1, newName);
@@ -160,6 +204,21 @@ public class DerbyUserDAO implements UserDAO{
 
         }catch (SQLException throwables) {
             LOGGER.error(throwables.getMessage());
+        } finally {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         return false;
@@ -174,10 +233,11 @@ public class DerbyUserDAO implements UserDAO{
     @Override
     public Collection selectUsersTO(String criteriaCol, String criteria) {
         ArrayList<User> selectedUsers = new ArrayList<>();
-
+        Statement sta = null;
+        ResultSet res = null;
         try {
-            Statement sta = con.createStatement();
-            ResultSet res = sta.executeQuery("SELECT ID, Address, Name, City " +
+            sta = con.createStatement();
+            res = sta.executeQuery("SELECT ID, Address, Name, City " +
                 "FROM DERBYUSER WHERE "+criteriaCol+" = '" + criteria + "'");
 
             while (res.next()) {
@@ -193,6 +253,21 @@ public class DerbyUserDAO implements UserDAO{
             sta.close();
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (sta != null) {
+                try {
+                    sta.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return selectedUsers;
     }
