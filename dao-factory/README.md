@@ -223,7 +223,7 @@ The program output:
 
 ## Applicability
 
-Use the Dao Factoru pattern in the following situation:
+Use the Dao Factory pattern in the following situation:
 
 * When the underlying storage is subject to change from one implementation to another.
 
