@@ -33,16 +33,15 @@ public class DerbyUserDAO implements UserDAO{
 
         try (Statement stmt = con.createStatement();) {
             final DatabaseMetaData dbm = con.getMetaData();
-            final ResultSet res = dbm.getTables(null, "APP", "DERBYUSER", null);
-
-            if (res.next()) {
-                if (LOGGER.isInfoEnabled()) {
-                    LOGGER.info("Table already exists");
-                }
-            } else {
+            final ResultSet rs = dbm.getTables(null, "APP", "DERBYUSER", null);
+            if (!rs.next()) {
                 stmt.execute(SQL_CREATE);
                 if (LOGGER.isInfoEnabled()) {
                     LOGGER.info("Table created");
+                }
+            }else{
+                if (LOGGER.isInfoEnabled()) {
+                    LOGGER.info("Table already exists");
                 }
             }
 
@@ -61,7 +60,7 @@ public class DerbyUserDAO implements UserDAO{
      */
     @Override
     public int insertUser(final User user) {
-        int lastInsertedId = -1;
+        int last_inserted_id = -1;
         try (PreparedStatement statement = con.prepareStatement("INSERT INTO DERBYUSER(NAME, ADDRESS, CITY) " +
             "VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS);) {
 
@@ -69,9 +68,9 @@ public class DerbyUserDAO implements UserDAO{
             statement.setString(2, user.getStreetAddress());
             statement.setString(3, user.getCity());
             statement.execute();
-            final ResultSet res = statement.getGeneratedKeys();
-            if (res.next()) {
-                lastInsertedId = res.getInt(1);
+            final ResultSet rs = statement.getGeneratedKeys();
+            if (rs.next()) {
+                last_inserted_id = rs.getInt(1);
             }
 
         } catch (SQLException e) {
@@ -79,7 +78,7 @@ public class DerbyUserDAO implements UserDAO{
                 LOGGER.error(e.getMessage());
             }
         }
-        return lastInsertedId;
+        return last_inserted_id;
     }
 
     /**
@@ -91,10 +90,10 @@ public class DerbyUserDAO implements UserDAO{
     @Override
     public boolean deleteUser(final User user) {
 
-        final int userId = user.getUserId();
+        final int id = user.getUserId();
         try (PreparedStatement stmt =con.prepareStatement("DELETE FROM DERBYUSER WHERE ID = ?");) {
 
-            stmt.setInt(1, userId);
+            stmt.setInt(1, id);
             return stmt.executeUpdate() > 0;
 
         } catch (SQLException e) {
@@ -116,7 +115,7 @@ public class DerbyUserDAO implements UserDAO{
     public User findUser(final int userId) {
 
         final User user = new User();
-        int foundId = -1;
+        int id = -1;
         String address = "";
         String name = "";
         String city = "";
@@ -125,7 +124,7 @@ public class DerbyUserDAO implements UserDAO{
             "SELECT * FROM DERBYUSER WHERE ID = " + userId);) {
 
             while (res.next()) {
-                foundId = res.getInt("ID");
+                id = res.getInt("ID");
                 address = res.getString("ADDRESS");
                 name = res.getString("NAME");
                 city = res.getString("CITY");
@@ -137,7 +136,7 @@ public class DerbyUserDAO implements UserDAO{
                 LOGGER.error(e.getMessage());
             }
         }
-        user.setUserId(foundId);
+        user.setUserId(id);
         user.setName(name);
         user.setStreetAddress(address);
         user.setCity(city);
@@ -156,7 +155,7 @@ public class DerbyUserDAO implements UserDAO{
              PreparedStatement preparedStatement =
                  con.prepareStatement("UPDATE DERBYUSER SET NAME = ? , " +
                  "ADDRESS = ?, CITY = ? WHERE ID = ?");) {
-            final int userId = user.getUserId();
+            final int id = user.getUserId();
             final String newName = user.getName();
             final String newAddress = user.getStreetAddress();
             final String newCity = user.getCity();
@@ -164,7 +163,7 @@ public class DerbyUserDAO implements UserDAO{
             preparedStatement.setString(1, newName);
             preparedStatement.setString(2, newAddress);
             preparedStatement.setString(3, newCity);
-            preparedStatement.setInt(4, userId);
+            preparedStatement.setInt(4, id);
             return preparedStatement.executeUpdate() > 0;
 
         }catch (SQLException throwables) {

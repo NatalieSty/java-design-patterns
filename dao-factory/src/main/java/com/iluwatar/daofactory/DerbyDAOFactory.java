@@ -17,9 +17,10 @@ public class DerbyDAOFactory extends DAOFactory {
             Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
             String dbURL1 = "jdbc:derby:dao-factory/DerbyDB;create=true";
             conn1 = DriverManager.getConnection(dbURL1);
-            if (conn1 != null && LOGGER.isInfoEnabled()) {
-                LOGGER.info("Connected to database #1");
-
+            if (conn1 != null) {
+                if (LOGGER.isInfoEnabled()) {
+                    LOGGER.info("Connected to database #1");
+                }
             }
 
         } catch (SQLException | ClassNotFoundException ex) {

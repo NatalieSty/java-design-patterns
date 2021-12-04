@@ -30,16 +30,16 @@ public class App {
     }
 
     private static int createUser(final UserDAO userDAO){
-        final User user = new User();
-        user.setName("Sam Doe");
-        user.setStreetAddress("333 4th Street");
-        user.setCity("Seattle");
+        final User u = new User();
+        u.setName("Sam Doe");
+        u.setStreetAddress("333 4th Street");
+        u.setCity("Seattle");
 
-        return userDAO.insertUser(user);
+        return userDAO.insertUser(u);
     }
 
-    private static User findUser(final int userId, final UserDAO userDAO){
-        final User user = userDAO.findUser(userId);
+    private static User findUser(final int id, final UserDAO userDAO){
+        final User user = userDAO.findUser(id);
         if (LOGGER.isInfoEnabled()){
             LOGGER.info("User Created: " + user.getUserId());
         }
