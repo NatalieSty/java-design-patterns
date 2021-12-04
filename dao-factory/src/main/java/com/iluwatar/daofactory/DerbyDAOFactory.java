@@ -18,11 +18,15 @@ public class DerbyDAOFactory extends DAOFactory {
             String dbURL1 = "jdbc:derby:dao-factory/DerbyDB;create=true";
             conn1 = DriverManager.getConnection(dbURL1);
             if (conn1 != null) {
-                LOGGER.info("Connected to database #1");
+                if (LOGGER.isInfoEnabled()) {
+                    LOGGER.info("Connected to database #1");
+                }
             }
 
         } catch (SQLException | ClassNotFoundException ex) {
-            LOGGER.error(ex.getMessage());
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error(ex.getMessage());
+            }
         }
         return conn1;
     }

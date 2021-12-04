@@ -34,14 +34,15 @@ public class App {
         u.setName("Sam Doe");
         u.setStreetAddress("333 4th Street");
         u.setCity("Seattle");
-//        final int newCustNo = userDAO.insertUser(u);
 
         return userDAO.insertUser(u);
     }
 
     private static User findUser(final int id, final UserDAO userDAO){
         final User user = userDAO.findUser(id);
-        LOGGER.info("User Created: " + user.getUserId());
+        if (LOGGER.isInfoEnabled()){
+            LOGGER.info("User Created: " + user.getUserId());
+        }
         return user;
     }
 
@@ -50,20 +51,30 @@ public class App {
         user.setName("Sam Smith");
         user.setCity("York");
         userDAO.updateUser(user);
-        LOGGER.info("User Updated: " + user.getUserId());
+        if (LOGGER.isInfoEnabled()){
+            LOGGER.info("User Updated: " + user.getUserId());
+        }
+
         return user;
     }
 
     private static void deleteUser(final User user, final UserDAO userDAO){
         userDAO.deleteUser(user);
-        LOGGER.info("User Deleted: " + user.getUserId());
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("User Deleted: " + user.getUserId());
+        }
     }
 
     private static void findUserWithCriteria(final UserDAO userDAO, final String criteriaCol, final String criteria){
         final Collection<User> userList = userDAO.selectUsersTO(criteriaCol, criteria);
-        LOGGER.info("Found "+ userList.size() +" Users With "+criteriaCol+ " = "+criteria+":");
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info(
+                "Found " + userList.size() + " Users With " + criteriaCol + " = " + criteria + ":");
+        }
         for (final User i: userList){
-            LOGGER.info("User "+i.getUserId());
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("User " + i.getUserId());
+            }
         }
     }
 
